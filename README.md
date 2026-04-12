@@ -1,5 +1,15 @@
 # Library-Management-Project-in-cpp
 A simple C++ Library Management System using OOP and file handling
+
+Features of Library Management Project 
+-Book Management: Add, search, issue, and return books with unique IDs.
+-User Management: Maintain records of students/ staff who borrow books.
+-Availability Tracking: Show wheather a book is available or issued.
+-File Handling: Store and retrieve book/ user data persistently in text file.
+-Validation: Prevent invalid operations(negative IDs, duplicate entries, issuing unavailable books).
+
+
+.Here is the code 
 #include <iostream>
 #include <fstream>
 #include <string>
