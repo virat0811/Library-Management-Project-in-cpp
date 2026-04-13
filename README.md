@@ -10,6 +10,7 @@ Features of Library Management Project
 
 
 .Here is the code 
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -34,6 +35,7 @@ class book{
         return quantity;
     }
 };
+
 void book::createbook(){
     cout<<"\n Enter Book ID number : ";
     cin>>bookid;
@@ -46,12 +48,14 @@ void book::createbook(){
     cin>>quantity;
     cout<<"\n Book Record Created Successfully! \n";
 }
+
 void book::showbook() const{
     cout<<"\n Book ID : "<<bookid;
     cout<<"\n Title : "<<title;
     cout<<"\n Author : "<<author;
     cout<<"\n Quantity : "<<quantity<<endl;
 }
+
 void book::modifybook(){
     cout<<"\n Modify Book Title : ";
     cin.ignore();
@@ -61,8 +65,17 @@ void book::modifybook(){
     cout<<"Modify Quantity : ";
     cin>>quantity;
 }
+
+
+//file handling functions
+void addbook();
+void displayallbooks();
+void displaybook(int);
+void modifybookrecord(int);
+void deletebookrecord(int);
+
+
 int main(){
-    
 
     return 0;
 }
