@@ -46,6 +46,21 @@ void book::createbook(){
     cin>>quantity;
     cout<<"\n Book Record Created Successfully! \n";
 }
+void book::showbook() const{
+    cout<<"\n Book ID : "<<bookid;
+    cout<<"\n Title : "<<title;
+    cout<<"\n Author : "<<author;
+    cout<<"\n Quantity : "<<quantity<<endl;
+}
+void book::modifybook(){
+    cout<<"\n Modify Book Title : ";
+    cin.ignore();
+    geline(cin,title);
+    cout<<"Modify Author Name : ";
+    getline(cin,author);
+    cout<<"Modify Quantity : ";
+    cin>>quantity;
+}
 int main(){
     
 
