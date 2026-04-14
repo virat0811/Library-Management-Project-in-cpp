@@ -76,6 +76,48 @@ void deletebookrecord(int);
 
 
 int main(){
-
+    char choice;
+    int id;
+    do{
+        cout<<"\n\n\t===== LIBRARY MANAGEMENT SYSTEM =====";
+        cout<<"\n 1 -> Add New Book ";
+        cout<<"\n 2 -> Display All Books ";
+        cout<<"\n 3 -> Search Book by ID ";
+        cout<<"\n 4 -> Modify Book Record ";
+        cout<<"\n 5 -> Delete Book Record ";
+        cout<<"\n 6 -> Exit ";
+        cout<<"\n\n Enter your choice (1-6) :";
+        cin>>choice;
+        switch(choice){
+            case '1':
+                addbook();
+                break;
+            case '2':
+                displayallbooks();
+                break;
+            case '3':
+                cout<<"\n Enter Book ID to Search: ";
+                cin>>id;
+                displaybook(id);
+                break;
+            case '4':
+                cout<<"\n Enter Book ID to Modify: ";
+                cin>>id;
+                modifybookrecord(id);
+                break;
+            case '5':
+                cout<<"\n Enter Book ID to Delete:";
+                cin>>id;
+                deletebookrecord(id);
+            case '6':
+                cout<<"\n Exiting......";
+                cout<<"Thank You for using Liberary Management System!\n";
+                break;
+            default:
+                cout<<"\n Invalid Option! Please try again \n";
+        }
+        cin.ignore();
+        cin.get();
+    }while(choice!='6');
     return 0;
 }
