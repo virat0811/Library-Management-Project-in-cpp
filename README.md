@@ -129,3 +129,19 @@ void addbook(){
     outFile.write(reinterpret_cast<char*>(&bk),sizeof(book));
     outFile.close();
 }
+void displayallbooks(){
+    book bk;
+    ifstream inFile("library.dat",ios::binary);
+    if(!inFile){
+        cout<<"\n File could not be opened! No data available.\n";
+        return;
+    }
+    cout<<"\n\n\t=====ALL BOOKS LIST=====\n";
+    cout<<"------------------------------\n";
+    cout<<setw(10)<<"Book ID"<<setw(25)<<"Title"<<setw(20)<<"Author"<<setw(10)<<"Qty\n";
+    cout<<"-------------------------------\n";
+    while(inFile.read(reinterpret_cast<char*>(&bk),sizeof(book))){
+        cout<<setw(10)<<bk.getbookid()<<setw(25)<<bk.gettitle()<<setw(20)<<bk.getquantity()<<endl;
+    }
+    inFile.close();
+}
