@@ -121,3 +121,11 @@ int main(){
     }while(choice!='6');
     return 0;
 }
+//file handling implementation
+void addbook(){
+    book bk;
+    ofstream outFile("library.dat",ios::binary|ios::app);
+    bk.createbook();
+    outFile.write(reinterpret_cast<char*>(&bk),sizeof(book));
+    outFile.close();
+}
