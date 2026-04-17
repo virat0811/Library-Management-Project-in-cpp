@@ -164,4 +164,31 @@ void displaybook(int n){
         cout<<"\n Book with ID "<<n<<"not found \n".
     }
 }
+void modifybookrecord(int n){
+    book bk;
+    bool found=false;
+    fstream file("library.dat",ios::binary|ios::in|ios::out);
+    if(!file){
+        cout<<"\n file could not be opened!\n";
+        return;
+    }
+    while(!file.eof()&&!found){
+        streampos pos=file.tellg();
+        file.read(reinterpret_cast<char*>(&bk),sizeof(book));
+        if(bk.getbookid()==n){
+            cout<<"\n Existing Book Details : ";
+            bk.showbook();
+            cout<<"\n Enter New Details : ";
+            bk.modifybook();
+            file.seekp(pos);
+            file.write(reinterpret_cast<char*>(&bk),sizeof(book));
+            cout<<"\n Record Updated Successfully!\n";
+            found=true;
+        }
+    }
+    file.close();
+    if(!found){
+        cout<<"\n book not found \n";
+    }
+}
 
