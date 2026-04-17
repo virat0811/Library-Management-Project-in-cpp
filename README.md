@@ -145,3 +145,23 @@ void displayallbooks(){
     }
     inFile.close();
 }
+void displaybook(int n){
+    book bk;
+    bool found =false;
+    ifstrema inFile("liberary.dat",ios::binary);
+    if(!inFile){
+        cout<<"\n File could not be opened!\n";
+        return;
+    }
+    while(intFile.read(reinterpret_cast<char*>(&bk),sizeof(book))){
+        if(bk.getbookid()==n){
+            bk.showbook();
+            found=true;
+        }
+    }
+    inFile.close();
+    if(!found){
+        cout<<"\n Book with ID "<<n<<"not found \n".
+    }
+}
+
