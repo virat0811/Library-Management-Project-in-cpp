@@ -14,6 +14,9 @@ Features of Library Management Project
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iomanip>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -24,18 +27,21 @@ class book{
     int quantity;
     public:
     void createbook();
-    void showbook();
+    void showbook() const;
+    void modifybook();
     int getbookid() const{
         return bookid;
     }
     string gettitle() const{
         return title;
     }
+    string getauthor() const{
+        return author;
+    }
     int getquantity() const{
         return quantity;
     }
 };
-
 void book::createbook(){
     cout<<"\n Enter Book ID number : ";
     cin>>bookid;
@@ -48,33 +54,28 @@ void book::createbook(){
     cin>>quantity;
     cout<<"\n Book Record Created Successfully! \n";
 }
-
 void book::showbook() const{
     cout<<"\n Book ID : "<<bookid;
     cout<<"\n Title : "<<title;
     cout<<"\n Author : "<<author;
     cout<<"\n Quantity : "<<quantity<<endl;
 }
-
 void book::modifybook(){
     cout<<"\n Modify Book Title : ";
     cin.ignore();
-    geline(cin,title);
+    getline(cin,title);
     cout<<"Modify Author Name : ";
     getline(cin,author);
     cout<<"Modify Quantity : ";
     cin>>quantity;
 }
-
-
 //file handling functions
 void addbook();
 void displayallbooks();
 void displaybook(int);
 void modifybookrecord(int);
 void deletebookrecord(int);
-
-
+//main menu
 int main(){
     char choice;
     int id;
@@ -109,9 +110,10 @@ int main(){
                 cout<<"\n Enter Book ID to Delete:";
                 cin>>id;
                 deletebookrecord(id);
+                break;
             case '6':
                 cout<<"\n Exiting......";
-                cout<<"Thank You for using Liberary Management System!\n";
+                cout<<"Thank You for using Library Management System!\n";
                 break;
             default:
                 cout<<"\n Invalid Option! Please try again \n";
@@ -124,14 +126,13 @@ int main(){
 //file handling implementation
 void addbook(){
     book bk;
-    ofstream outFile("library.dat",ios::binary|ios::app);
+    ofstream outFile("library.txt",ios::app);
     bk.createbook();
-    outFile.write(reinterpret_cast<char*>(&bk),sizeof(book));
+    outFile << bk.getbookid() << "," << bk.gettitle() << "," << bk.getauthor() << "," << bk.getquantity() << endl;
     outFile.close();
 }
 void displayallbooks(){
-    book bk;
-    ifstream inFile("library.dat",ios::binary);
+    ifstream inFile("library.txt");
     if(!inFile){
         cout<<"\n File could not be opened! No data available.\n";
         return;
@@ -140,55 +141,118 @@ void displayallbooks(){
     cout<<"------------------------------\n";
     cout<<setw(10)<<"Book ID"<<setw(25)<<"Title"<<setw(20)<<"Author"<<setw(10)<<"Qty\n";
     cout<<"-------------------------------\n";
-    while(inFile.read(reinterpret_cast<char*>(&bk),sizeof(book))){
-        cout<<setw(10)<<bk.getbookid()<<setw(25)<<bk.gettitle()<<setw(20)<<bk.getquantity()<<endl;
+    string line;
+    while(getline(inFile, line)){
+        stringstream ss(line);
+        string id, title, author, qty;
+        getline(ss, id, ',');
+        getline(ss, title, ',');
+        getline(ss, author, ',');
+        getline(ss, qty, ',');
+        cout<<setw(10)<<id<<setw(25)<<title<<setw(20)<<author<<setw(10)<<qty<<endl;
     }
     inFile.close();
 }
 void displaybook(int n){
-    book bk;
-    bool found =false;
-    ifstrema inFile("liberary.dat",ios::binary);
+    ifstream inFile("library.txt");
     if(!inFile){
         cout<<"\n File could not be opened!\n";
         return;
     }
-    while(intFile.read(reinterpret_cast<char*>(&bk),sizeof(book))){
-        if(bk.getbookid()==n){
-            bk.showbook();
-            found=true;
+    string line;
+    bool found = false;
+    while(getline(inFile, line)){
+        stringstream ss(line);
+        string id_str, title, author, qty;
+        getline(ss, id_str, ',');
+        getline(ss, title, ',');
+        getline(ss, author, ',');
+        getline(ss, qty, ',');
+        int id = stoi(id_str);
+        if(id == n){
+            cout<<"\n Book ID : "<<id<<"\n Title : "<<title<<"\n Author : "<<author<<"\n Quantity : "<<qty<<endl;
+            found = true;
         }
     }
     inFile.close();
     if(!found){
-        cout<<"\n Book with ID "<<n<<"not found \n".
+        cout<<"\n Book with ID "<<n<<" not found \n";
     }
 }
 void modifybookrecord(int n){
-    book bk;
-    bool found=false;
-    fstream file("library.dat",ios::binary|ios::in|ios::out);
-    if(!file){
-        cout<<"\n file could not be opened!\n";
-        return;
+    vector<string> lines;
+    ifstream inFile("library.txt");
+    string line;
+    while(getline(inFile, line)){
+        lines.push_back(line);
     }
-    while(!file.eof()&&!found){
-        streampos pos=file.tellg();
-        file.read(reinterpret_cast<char*>(&bk),sizeof(book));
-        if(bk.getbookid()==n){
-            cout<<"\n Existing Book Details : ";
-            bk.showbook();
+    inFile.close();
+    bool found = false;
+    for(auto& l : lines){
+        stringstream ss(l);
+        string id_str, title, author, qty;
+        getline(ss, id_str, ',');
+        getline(ss, title, ',');
+        getline(ss, author, ',');
+        getline(ss, qty, ',');
+        int id = stoi(id_str);
+        if(id == n){
+            cout<<"\n Existing Book Details : \n Book ID : "<<id<<"\n Title : "<<title<<"\n Author : "<<author<<"\n Quantity : "<<qty<<endl;
             cout<<"\n Enter New Details : ";
-            bk.modifybook();
-            file.seekp(pos);
-            file.write(reinterpret_cast<char*>(&bk),sizeof(book));
-            cout<<"\n Record Updated Successfully!\n";
-            found=true;
+            cout<<"\n Enter new title: ";
+            cin.ignore();
+            getline(cin, title);
+            cout<<"Enter new author: ";
+            getline(cin, author);
+            cout<<"Enter new quantity: ";
+            cin>>qty;
+            stringstream new_ss;
+            new_ss << id << "," << title << "," << author << "," << qty;
+            l = new_ss.str();
+            found = true;
+            break;
         }
     }
-    file.close();
-    if(!found){
+    if(found){
+        ofstream outFile("library.txt");
+        for(auto& l : lines){
+            outFile << l << endl;
+        }
+        outFile.close();
+        cout<<"\n Record Updated Successfully!\n";
+    } else {
         cout<<"\n book not found \n";
     }
 }
-
+void deletebookrecord(int n){
+    vector<string> lines;
+    ifstream inFile("library.txt");
+    string line;
+    while(getline(inFile, line)){
+        lines.push_back(line);
+    }
+    inFile.close();
+    vector<string> new_lines;
+    bool found = false;
+    for(auto& l : lines){
+        stringstream ss(l);
+        string id_str;
+        getline(ss, id_str, ',');
+        int id = stoi(id_str);
+        if(id != n){
+            new_lines.push_back(l);
+        } else {
+            found = true;
+        }
+    }
+    ofstream outFile("library.txt");
+    for(auto& l : new_lines){
+        outFile << l << endl;
+    }
+    outFile.close();
+    if(found){
+        cout<<"\n Book Record Deleted Successfully \n";
+    } else {
+        cout<<"\n Book not found \n";
+    }
+}
